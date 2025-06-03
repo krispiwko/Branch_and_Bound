@@ -19,7 +19,8 @@ class BB_subproblem:
         # Zwraca najlepszą drogę (odcinek (i, j))
         pass
 
-    def divide_subproblem(self, best_road):
+    def divide_subproblem(self):
+        # Znajdź najlepszą drogę
         # Podziel podproblem na dwa podproblemy
         # Pierwszy podproblem:
         # wykreśl wiersz i i kolumnę j (daj tam np.inf)
@@ -38,15 +39,22 @@ class BB:
         self.subproblem_list = []
         self.best_v = np.inf
 
+    # K_PIWKOWSKI
     def solve(self):
         # Pętla while self.subproblem_list:
         # jedna metoda grupująca metody algorytmu
-        pass
+        self.initialize()
+        while self.subproblem_list:
+            curr_subproblem = self.choose_subproblem()
+            sum_of_reduction = reduce_matrix(curr_subproblem.reduced_matrix)
+            self.try_to_close_subproblem(curr_subproblem)
+
+
 
     def initialize(self):
         # Początkowa inicjalizacja problem:
         # daj nieskończoności na przekątnej
-        # zredukuj macierz kosztów
+        # zredukuj macierz kosztów - dodaj wartość redukcji do lower_bound
         # stwórz obiekt BB_subproblem i dodaj na listę podproblemów
         pass
 
@@ -72,7 +80,7 @@ def reduce_matrix(matrix):
         col_min = np.min(matrix, axis=1)[j]
         matrix[:, j] = matrix[:, j] - col_min
         sum_of_reduction += col_min
-    return matrix, sum_of_reduction
+    return sum_of_reduction
 
 
 
