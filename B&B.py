@@ -28,6 +28,7 @@ class BB_subproblem:
 
         # Drugi podproblem:
         # daj np.inf w (i, j)
+        # Zredukuj oba podproblemy i dodaj do ich LB wartość redukcji
         # Zwróć oba podproblemy jako obiekty klasy BB_subproblem
         pass
 
@@ -52,8 +53,7 @@ class BB:
 
 
     def initialize(self):
-        # Początkowa inicjalizacja problem:
-        # daj nieskończoności na przekątnej
+        # Początkowa inicjalizacja problemu:
         # zredukuj macierz kosztów - dodaj wartość redukcji do lower_bound
         # stwórz obiekt BB_subproblem i dodaj na listę podproblemów
         pass
@@ -66,7 +66,7 @@ class BB:
         # Sprawdź kryteria zamknięcia:
         # KZ1 - Brak możliwego rozwiązania (lower_bound == np.inf)
         # KZ2 - Jeżeli lower_bound > best_v
-        # KZ3 - Jeżeli znaleziono rozwiązanie v (sprawdzamy czy trzeba zaktualizować best_v)
+        # KZ3 - Jeżeli znaleziono rozwiązanie v (rozmiar macierzy <= 2) (sprawdzamy czy trzeba zaktualizować best_v)
         # Jeżeli nic z tego, to dzielimy podproblem i dodajemy dwa te podproblemy do listy
         pass
 
