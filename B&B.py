@@ -61,7 +61,7 @@ class BB:
         self.subproblem_list.append(first_subproblem)
 
     def choose_subproblem(self):
-        # Wybierz podproblem z listy o najmniejszym lower_bound
+        # Wybierz podproblem z listy o najmniejszym lower_bound (usuń go z listy! np metodą pop())
         return best_subproblem
 
     def try_to_close_subproblem(self, subproblem):
