@@ -47,20 +47,22 @@ class BB:
         self.initialize()
         while self.subproblem_list:
             curr_subproblem = self.choose_subproblem()
-            sum_of_reduction = reduce_matrix(curr_subproblem.reduced_matrix)
             self.try_to_close_subproblem(curr_subproblem)
+        return self.best_v
 
 
 
     def initialize(self):
         # Początkowa inicjalizacja problemu:
         # zredukuj macierz kosztów - dodaj wartość redukcji do lower_bound
+        matrix, sum_of_redcution = reduce_matrix(self.cost_matrix)
         # stwórz obiekt BB_subproblem i dodaj na listę podproblemów
-        pass
+        first_subproblem = BB_subproblem(1, matrix, sum_of_redcution, [])
+        self.subproblem_list.append(first_subproblem)
 
     def choose_subproblem(self):
         # Wybierz podproblem z listy o najmniejszym lower_bound
-        pass
+        return best_subproblem
 
     def try_to_close_subproblem(self, subproblem):
         # Sprawdź kryteria zamknięcia:
@@ -80,7 +82,7 @@ def reduce_matrix(matrix):
         col_min = np.min(matrix, axis=1)[j]
         matrix[:, j] = matrix[:, j] - col_min
         sum_of_reduction += col_min
-    return sum_of_reduction
+    return matrix, sum_of_reduction
 
 
 
