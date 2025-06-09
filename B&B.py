@@ -17,7 +17,25 @@ class BB_subproblem:
         # Znajdź wszystkie wartości minimalne (bez zera!) z wierszy i kolumn z zerami pośrodku
         # Wybierz tę drogę o MASKYMALNEJ wyliczonej wartości
         # Zwraca najlepszą drogę (odcinek (i, j))
-        pass
+        max_penalty = -1
+        best_road = (-1, -1)
+        n = self.reduced_matrix.shape[0]
+
+        for i in range(n):
+            for j in range(n):
+                if self.reduced_matrix[i][j] == 0:
+                    # Oblicz karę (penalty) za wybranie tej drogi (i, j)
+                    row_vals = [self.reduced_matrix[i][k] for k in range(n) if k != j]
+                    col_vals = [self.reduced_matrix[k][j] for k in range(n) if k != i]
+                    row_min = min(row_vals) if row_vals else 0
+                    col_min = min(col_vals) if col_vals else 0
+                    penalty = row_min + col_min
+
+                    if penalty > max_penalty:
+                        max_penalty = penalty
+                        best_road = (i, j)
+
+        return best_road
 
     def divide_subproblem(self):
         # Znajdź najlepszą drogę
@@ -30,7 +48,36 @@ class BB_subproblem:
         # daj np.inf w (i, j)
         # Zredukuj oba podproblemy i dodaj do ich LB wartość redukcji
         # Zwróć oba podproblemy jako obiekty klasy BB_subproblem
-        pass
+
+        i, j = self.find_best_road()
+        n = self.reduced_matrix.shape[0]
+
+        # Podproblem z drogą (i, j) WYMUSZONĄ
+        matrix_with = np.copy(self.reduced_matrix)
+        matrix_with[i, :] = np.inf
+        matrix_with[:, j] = np.inf
+        matrix_with[j, i] = np.inf  # zapobiega powrotowi
+
+        reduced_with, red_cost_with = reduce_matrix(matrix_with.copy())
+        road_list_with = self.road_list + [(i, j)]
+        subproblem_with = BB_subproblem(
+            self.index + 1, reduced_with,
+            self.lower_bound + self.reduced_matrix[i][j] + red_cost_with,
+            road_list_with
+        )
+
+        # Podproblem z drogą (i, j) ZAKAZANĄ
+        matrix_without = np.copy(self.reduced_matrix)
+        matrix_without[i, j] = np.inf
+
+        reduced_without, red_cost_without = reduce_matrix(matrix_without.copy())
+        subproblem_without = BB_subproblem(
+            self.index + 1, reduced_without,
+            self.lower_bound + red_cost_without,
+            self.road_list
+        )
+
+        return subproblem_with, subproblem_without
 
 
 class BB:
